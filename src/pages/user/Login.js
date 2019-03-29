@@ -27,22 +27,24 @@ class Login extends PureComponent {
             <Fragment>
                 <div className={styles.login}>
                     <Form>
-                        <FormItem>
+                        <FormItem hasFeedback>
                             { getFieldDecorator('username', {
                                 rules: [
                                     {required: true, message: '请输入用户名'}
                                 ]
                             })(
-                                <Input prefix={<Icon type='user' style={{color: 'rgba(0,0,0,0.25)'}} />} placeholder="用户名"></Input>
+                                <Input prefix={<Icon type='user' style={{color: 'rgba(0,0,0,0.25)'}} />} placeholder="用户名" 
+                                    onPressEnter= {this.handleOk}/>
                             )}
                         </FormItem>
-                        <FormItem>
+                        <FormItem hasFeedback>
                             { getFieldDecorator('password', {
                                 rules: [
                                     { required: true, message: '请输入密码'}
                                 ]
                             })(
-                                <Input prefix={<Icon type='lock' style={{color: 'rgba(0,0,0,0.25)'}} />} type="password" placeholder="密码"></Input>
+                                <Input prefix={<Icon type='lock' style={{color: 'rgba(0,0,0,0.25)'}} />} 
+                                    type="password" placeholder="密码" onPressEnter={this.handleOk}/>
                             )}
                         </FormItem>
                         <FormItem>

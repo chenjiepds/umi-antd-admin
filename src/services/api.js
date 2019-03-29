@@ -1,9 +1,13 @@
 import request from '@/utils/request'
-import { stringfy } from 'qs'
+import { stringify } from 'qs'
 
 export async function fakeLogin(params) {
     return request('/api/login/account', {
         method: 'POST',
         body: params
     })
+}
+
+export async function queryUserList(params) {
+    return request(`/api/user/list?${stringify(params)}`)
 }
