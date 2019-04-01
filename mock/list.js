@@ -22,6 +22,29 @@ let userListData = Mock.mock({
 
 let database = userListData.data;
 
+const queryArray = (array, key, keyAlias = 'key') => {
+    
+    if(!(array instanceof Array)) {
+        return null
+    }
+    let data;
+    for (let item of array) {
+        if(item[keyAlias] === key) {
+            data = item; 
+            break;
+        }
+    }
+
+    if(data) {
+        return data;
+    }
+    return null;
+}
+
+const NOTFOUND = {
+    message: 'Not Found'
+}
+
 export default {
     'GET /api/user/list': (req, res) => {
         const { query } = req;
@@ -35,5 +58,16 @@ export default {
             data: newData.slice((page -1) * pageSize, page * pageSize),
             total: newData.length
         })
+    },
+    'GET /api/user/delete/:id': (req, res) => {
+        
+        const { id } = req.params;
+        const data = queryArray(database, id, 'id')
+        if(data) {
+            database = database.filter(item => item.id != id);
+            res.status(200).json(data)
+        } else {
+            res.status(200).json(NOTFOUND)
+        }
     }
 }

@@ -77,7 +77,6 @@ const cachedSave = (response, hashcode) => {
 
 
 export default function request(url, option) {
-  debugger
   const options ={
     ...option
   }

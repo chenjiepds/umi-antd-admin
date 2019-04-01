@@ -1,11 +1,39 @@
 import React, { PureComponent } from 'react'
-import { Table, Avatar } from 'antd' 
+import { Table, Avatar, Modal } from 'antd' 
+import PropTypes from 'prop-types'
 import DropOption from '@/components/DropOption/DropOption'
 import Link from 'umi/link'
 
+const { confirm } = Modal
+
 class UserList extends PureComponent {
+
+    handleMenuClick(record, e) {
+        const { onEditItem, onDeleteItem } = this.props 
+
+        if(e.key === '1') {
+            onEditItem(record)
+        } else if (e.key === '2') {
+            confirm({
+                title: '确定删除该条记录吗？',
+                onOk() {
+                    onDeleteItem(record.id)
+                } 
+            })
+        }
+    }
+
+    onSelectChange = (selectedRowKeys) => {
+        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        this.setState({ selectedRowKeys });
+      }
+
     render() {
-        const { ...listProps } = this.props
+        const { selectedRowKeys, ...listProps} = this.props
+        const rowSelection = {
+            selectedRowKeys,
+            onChange: this.onSelectChange,
+          };
         const columns = [
             {
                 title: '头像',
@@ -54,6 +82,11 @@ class UserList extends PureComponent {
         return (
             <Table
             {...listProps}
+                rowSelection = {rowSelection}
+                pagination = {{
+                    ...listProps.pagination,
+                    showTotal: total => `共${total}条`
+                }}
                 bordered
                 columns={columns}
                 simple
@@ -61,6 +94,12 @@ class UserList extends PureComponent {
             ></Table>
         )
     }
+}
+
+UserList.propTypes = {
+    onDelteItem: PropTypes.func,
+    onEditItem: PropTypes.func,
+    listProps: PropTypes.object
 }
 
 export default UserList
