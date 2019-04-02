@@ -17,7 +17,7 @@ export default {
                     pagination: {
                         current: Number(payload.page) || 1,
                         pageSize: Number(payload.pageSize) || 10,
-                        total: response.total
+                        total: response.total,
                     }
                 }
             })

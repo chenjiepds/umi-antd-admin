@@ -6,27 +6,42 @@ import { connect } from 'dva'
 
 @connect(({ list, loading }) => ({list, loading }))
 class List extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     componentDidMount() {
         this.handleRefresh()
     }
 
-    handleRefresh() {
+    handleRefresh(params){
         const { dispatch } = this.props;
         dispatch({
             type: 'list/query',
-            payload: {}
+            payload: {...params}
         })
     }
 
+    handleTableChange(pagination, filters, sorter){
+        this.handleRefresh({
+            page: pagination.current,
+            pageSize: pagination.pageSize
+        })
+    }
     render() {
-        debugger
+        
         const { loading, list, dispatch } = this.props;
         const { userList, pagination } = list
+        const paginationProps = {
+            ...pagination,
+            showSizeChanger: true,
+            showQuickJumper: true
+        }
         const _that = this;
         const listProps = {
             dataSource: userList,
             loading: loading.effects['list/query'],
-            pagination,
+            pagination: paginationProps,
             onDeleteItem(id) {
                 dispatch({
                     type: 'list/delete',
@@ -37,7 +52,10 @@ class List extends Component {
             }
         }
         return (
-            <UserList {...listProps}/>
+            <UserList 
+                {...listProps} 
+                onChange= { this.handleTableChange.bind(this) } 
+            />
         )
     }
 }

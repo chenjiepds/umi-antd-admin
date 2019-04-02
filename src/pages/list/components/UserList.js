@@ -8,6 +8,10 @@ const { confirm } = Modal
 
 class UserList extends PureComponent {
 
+    constructor(props) {
+        super(props)
+    }
+
     handleMenuClick(record, e) {
         const { onEditItem, onDeleteItem } = this.props 
 
@@ -23,6 +27,13 @@ class UserList extends PureComponent {
         }
     }
 
+    handleTableChange(pagination, filters, sorter) {
+        const { onChange } = this.props;
+        if(onChange) {
+            onChange(pagination, filters, sorter)
+        }
+    }
+
     onSelectChange = (selectedRowKeys) => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
@@ -33,12 +44,13 @@ class UserList extends PureComponent {
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
-          };
+        };
+        
         const columns = [
             {
                 title: '头像',
                 dataIndex: 'avatar',
-                fixed: 'left',
+                // fixed: 'left',
                 render: text => <Avatar style={{marginLeft: 8}} src={text}/>
             },
             {
@@ -65,7 +77,7 @@ class UserList extends PureComponent {
             {
                 title: '操作',
                 key: 'operation',
-                fixed: 'right',
+                // fixed: 'right',
                 render: (text, record) => {
                     return (
                         <DropOption onMenuClick = { e => this.handleMenuClick(record, e)}
@@ -81,12 +93,13 @@ class UserList extends PureComponent {
 
         return (
             <Table
-            {...listProps}
+                {...listProps}
                 rowSelection = {rowSelection}
                 pagination = {{
                     ...listProps.pagination,
                     showTotal: total => `共${total}条`
                 }}
+                onChange = {this.handleTableChange.bind(this)}
                 bordered
                 columns={columns}
                 simple
@@ -99,7 +112,8 @@ class UserList extends PureComponent {
 UserList.propTypes = {
     onDelteItem: PropTypes.func,
     onEditItem: PropTypes.func,
-    listProps: PropTypes.object
+    listProps: PropTypes.object,
+    onChange: PropTypes.func.isRequired
 }
 
 export default UserList
